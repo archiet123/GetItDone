@@ -12,6 +12,15 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      }, //bb6da6
+      colors: {
+        primary: "#282c34",
+        secondary: "#333842",
+        tertiary: "#4C0BDE",
+        primary2: "#353453",
+        secondary2: "#2b2c41",
+        tertiary2: "#cc709f",
+        text: "#FFFFFF",
       },
     },
   },
