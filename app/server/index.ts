@@ -21,9 +21,9 @@ const appRouter = router({
 
       // Retrieve the user with the given ID
       // Create a new user in the database
-      const user = await prisma.user.create(input);
+      const createUser = await prisma.user.create({ data: input });
 
-      return user;
+      return createUser;
     }),
 });
 
