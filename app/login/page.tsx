@@ -15,17 +15,21 @@ const trpc = createTRPCClient<AppRouter>({
   ],
 });
 
-const FetchUsers = async () => {
-  const User = trpc.userList;
-};
+const createdUser = trpc.userCreate.mutate({ name: "sachinraja" });
+//    ^?
+console.log("Created user:", createdUser);
 
-const createdUser = await trpc.userCreate.mutate({ name: "sachinraja" });
+// const FetchUsers = async () => {
+//   const User = trpc.userList;
+// };
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <p></p>
-      <Button onClick={FetchUsers}>hi</Button>
-    </main>
-  );
-}
+// const createdUser = await trpc.userCreate.mutate({ name: "sachinraja" });
+
+// export default function Home() {
+//   return (
+//     <main className="flex min-h-screen flex-col items-center justify-between p-24">
+//       <p></p>
+//       <Button onClick={FetchUsers}>hi</Button>
+//     </main>
+//   );
+// }

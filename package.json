@@ -12,10 +12,12 @@
     "test": "npx tsx script.ts"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
     "@prisma/client": "^5.16.1",
     "@trpc/client": "^11.0.0-rc.433",
     "@trpc/server": "^11.0.0-rc.433",
     "next": "14.2.4",
+    "next.js": "^1.0.3",
     "react": "^18",
     "react-dom": "^18",
     "zod": "^3.23.8"

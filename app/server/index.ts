@@ -4,7 +4,7 @@ import { prisma } from "../utils/prisma.server";
 import { z } from "zod";
 import { User } from "../types/User";
 
-const input: string;
+//const input: string;
 // const user: User | undefined;
 
 const appRouter = router({
@@ -14,18 +14,17 @@ const appRouter = router({
     return User;
   }),
 
-  userCreate: publicProcedure.input(z.string()).query(async (opts) => {
-    const { input } = opts;
+  userCreate: publicProcedure
+    .input(z.object({ name: z.string() }))
+    .mutation(async (opts) => {
+      const { input } = opts;
 
-    // Retrieve the user with the given ID
-    const user = await prisma.user.create({
-      data: {
-        name: { opts },
-      },
-    });
+      // Retrieve the user with the given ID
+      // Create a new user in the database
+      const user = await prisma.user.create(input);
 
-    return user;
-  }),
+      return user;
+    }),
 });
 
 // Export type router type signature,
