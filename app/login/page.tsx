@@ -5,7 +5,7 @@ import { register } from "../utils/auth.server";
 import Image from "next/image";
 import { Select, Button, Box } from "@chakra-ui/react";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
-import type { AppRouter } from "../server/index";
+import type { AppRouter } from "../server/trpc/router/index";
 import { User } from "../types/User";
 //import { trpc } from "../utils/trpc";
 
@@ -35,7 +35,9 @@ const trpc = createTRPCClient<AppRouter>({
 //console.log("All users:", allUsers);
 
 const handleFetchUsers = async () => {
-  const allUsers = await trpc.userList.query();
+  //const allUsers = await trpc.userList.query();
+  const allUsers = await trpc.users.userList.query();
+  //const createdUser = await trpc.userCreate.mutate({ name: "test1" });
   console.log(allUsers);
 };
 
@@ -48,7 +50,7 @@ const handleFetchUsers = async () => {
 export default function Home() {
   //const [Users, setProducts] = useState(initialUsers);
   return (
-    <main className="flex min-h-screen items-center justify-between">
+    <main className="flex min-h-screen items-center justify-between bg-primary text-white">
       <p>Hello World!</p>
       <Button onClick={handleFetchUsers}>button</Button>
 
