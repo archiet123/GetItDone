@@ -8,8 +8,7 @@ import { User } from "../types/User";
 // const user: User | undefined;
 
 const appRouter = router({
-  userList: publicProcedure.query(async () => {
-    // Retrieve users from a datasource, this is an imaginary database
+  userList: publicProcedure.query(async ({ ctx }) => {
     const User = await prisma.user.findMany();
     return User;
   }),
@@ -27,6 +26,7 @@ const appRouter = router({
     }),
 });
 
+export type AppRouter = typeof appRouter;
 // Export type router type signature,
 // NOT the router itself.
 const server = createHTTPServer({
@@ -34,5 +34,3 @@ const server = createHTTPServer({
 });
 
 server.listen(3000);
-
-export type AppRouter = typeof appRouter;

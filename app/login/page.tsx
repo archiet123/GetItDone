@@ -7,42 +7,50 @@ import { Select, Button, Box } from "@chakra-ui/react";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "../server/index";
 import { User } from "../types/User";
+//import { trpc } from "../utils/trpc";
 
+import {
+  splitLink,
+  unstable_httpBatchStreamLink,
+  unstable_httpSubscriptionLink,
+} from "@trpc/client";
+
+//Initialize the tRPC client
 const trpc = createTRPCClient<AppRouter>({
   links: [
-    httpBatchLink({
-      url: "http://localhost:3000",
+    splitLink({
+      condition: (op) => op.type === "subscription",
+      true: unstable_httpSubscriptionLink({
+        url: "http://localhost:3000",
+      }),
+      false: unstable_httpBatchStreamLink({
+        url: "http://localhost:3000",
+      }),
     }),
   ],
 });
 
 /////////////database queries
-const allUsers = trpc.userList.query();
+//const allUsers = await trpc.userList.query();
 //console.log("All users:", allUsers);
 
 const handleFetchUsers = async () => {
-  const User = await allUsers;
-  console.log(User);
+  const allUsers = await trpc.userList.query();
+  console.log(allUsers);
 };
 
-const createdUser = trpc.userCreate.mutate({ name: "test1" });
-console.log("Created user:", createdUser);
+// const createdUser = trpc.userCreate.mutate({ name: "test1" });
+// console.log("Created user:", createdUser);
 /////////////
-
-//setting User data
-interface IUser {
-  id: Number;
-  name: string;
-}
 
 //const initialUsers: IUser[] = handleFetchUsers;
 
 export default function Home() {
   //const [Users, setProducts] = useState(initialUsers);
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
+    <main className="flex min-h-screen items-center justify-between">
       <p>Hello World!</p>
-      <Button onClick={handleFetchUsers}></Button>
+      <Button onClick={handleFetchUsers}>button</Button>
 
       {/* <>
         {Users.map((User, i) => (
