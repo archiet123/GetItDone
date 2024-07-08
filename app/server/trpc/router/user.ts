@@ -23,4 +23,9 @@ export const userRouter = t.router({
       });
       return createUser;
     }),
+  worldGreeting: publicProcedure.query(async () => {
+    return {
+      message: "Hello World!",
+    };
+  }),
 });
