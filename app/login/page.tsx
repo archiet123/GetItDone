@@ -1,5 +1,6 @@
 "use client";
 
+import { createTRPCNext } from "@trpc/next";
 import { Fragment, useRef, useState } from "react";
 import { register } from "../utils/auth.server";
 import Image from "next/image";
@@ -16,30 +17,10 @@ import {
 } from "@trpc/client";
 
 //Initialize the tRPC client
-const trpc = createTRPCClient<AppRouter>({
-  links: [
-    splitLink({
-      condition: (op) => op.type === "subscription",
-      true: unstable_httpSubscriptionLink({
-        url: "http://localhost:3000",
-      }),
-      false: unstable_httpBatchStreamLink({
-        url: "http://localhost:3000",
-      }),
-    }),
-  ],
-});
 
 /////////////database queries
 //const allUsers = await trpc.userList.query();
 //console.log("All users:", allUsers);
-
-const handleFetchUsers = async () => {
-  //const allUsers = await trpc.userList.query();
-  const allUsers = await trpc.users.userList.query();
-  //const createdUser = await trpc.userCreate.mutate({ name: "test1" });
-  console.log(allUsers);
-};
 
 // const createdUser = trpc.userCreate.mutate({ name: "test1" });
 // console.log("Created user:", createdUser);
@@ -48,19 +29,62 @@ const handleFetchUsers = async () => {
 //const initialUsers: IUser[] = handleFetchUsers;
 
 export default function Home() {
+  const trpc = createTRPCClient<AppRouter>({
+    links: [
+      splitLink({
+        condition: (op) => op.type === "subscription",
+        true: unstable_httpSubscriptionLink({
+          url: "http://localhost:3000",
+        }),
+        false: unstable_httpBatchStreamLink({
+          url: "http://localhost:3000",
+        }),
+      }),
+    ],
+  });
+
+  // links: [
+  //   splitLink({
+  //     condition: (op) => op.type === "subscription",
+  //     true: unstable_httpSubscriptionLink({
+  //       url: "http://localhost:3000",
+  //     }),
+  //     false: unstable_httpBatchStreamLink({
+  //       url: "http://localhost:3000",
+  //     }),
+  //   }),
+  // ],
+
+  //   config() {
+  //     return {
+  //       links: [
+  //         splitLink({
+  //           condition: (op) => op.type === "subscription",
+  //           true: unstable_httpSubscriptionLink({
+  //             url: "http://localhost:3000/api/trpc",
+  //           }),
+  //           false: unstable_httpBatchStreamLink({
+  //             url: "http://localhost:3000/api/trpc",
+  //           }),
+  //         }),
+  //       ],
+  //     };
+  //   },
+  //   ssr: false,
+  // });
+
+  const handleFetchUsers = async () => {
+    //const allUsers = await trpc.userList.query();
+    const allUsers = await trpc.users.userList.query();
+    //const createdUser = await trpc.userCreate.mutate({ name: "test1" });
+    console.log(allUsers);
+  };
+
   //const [Users, setProducts] = useState(initialUsers);
   return (
     <main className="flex min-h-screen items-center justify-between bg-primary text-white">
       <p>Hello World!</p>
       <Button onClick={handleFetchUsers}>button</Button>
-
-      {/* <>
-        {Users.map((User, i) => (
-          <Box padding={0} key={i}>
-            <h1>{User.name}</h1>
-          </Box>
-        ))}
-      </> */}
     </main>
   );
 }
