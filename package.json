@@ -22,6 +22,7 @@
     "next": "14.2.4",
     "next-auth": "^4.24.7",
     "next.js": "^1.0.3",
+    "node-fetch": "^3.3.2",
     "react": "^18.3.1",
     "react-dom": "^18",
     "super-json": "^2.2.0",
