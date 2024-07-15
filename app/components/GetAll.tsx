@@ -1,14 +1,23 @@
 import { trpc } from "../../server/client";
+import { useState, Fragment } from "react";
+
+// async function HandleGetRecords() {
+//   const GetRecords = await trpc.user1.userList.useQuery();
+//   return GetRecords;
+// }
 
 export default function Robbery() {
-  //const GetUsers = trpc.user.completion.useMutation();
-  const a = trpc.user1.Test.useQuery();
-
-  //const b = trpc.user.completion.useMutation();
+  const UserRecords = trpc.user1.userList.useQuery();
 
   return (
-    <main className="flex min-h-screen items-center justify-between bg-primary text-white">
-      {JSON.stringify(a.data)}
+    <main className="flex flex-col min-h-screen items-center bg-primary text-white">
+      <ul>
+        {UserRecords.data?.map((UserRecord, i) => (
+          <Fragment key={i}>
+            {UserRecord.name} {UserRecord.description}
+          </Fragment>
+        ))}
+      </ul>
     </main>
   );
 }

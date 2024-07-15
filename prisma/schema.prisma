@@ -15,6 +15,7 @@ datasource db {
 
 model UserTable {
   id Int @id @default(autoincrement())
-  name String
+  name String 
   description String
 }
+

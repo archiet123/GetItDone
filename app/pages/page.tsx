@@ -1,23 +1,29 @@
 "use client";
 
-import { createTRPCNext } from "@trpc/next";
-import { Fragment, useRef, useState } from "react";
-//import { register } from "../../utils/auth.server";
-import Image from "next/image";
-import { Select, Button, Box } from "@chakra-ui/react";
-import { createTRPCClient, httpBatchLink } from "@trpc/client";
-//import type { AppRouter } from "../server/trpc/router/index";
-import { User } from "../../types/User";
-//import { trpc } from "../utils/trpc";
+//componets
+import GetAll from "../components/GetAll";
+import Buttons from "../components/Buttons";
 
-//const initialUsers: IUser[] = handleFetchUsers;
+import { trpc } from "../../server/client";
+import { Button } from "@chakra-ui/react";
 
-import GetAll from "../components//GetAll";
+// async function HandleDeleteRecord() {
+//   const DeleteRecord1 = await trpc.user1.deleteUser.useMutation();
+//   return DeleteRecord1;
+// }
+
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-between bg-primary text-white">
-      hello
-      <GetAll></GetAll>
+    <main className="min-h-screen bg-primary text-white m-auto">
+      <div id="title" className="flex flex-col text-center">
+        <h1 className="title">hello world</h1>
+      </div>
+      <div className="">
+        <GetAll></GetAll>
+      </div>
+      <div className="">
+        <Buttons></Buttons>
+      </div>
     </main>
   );
 

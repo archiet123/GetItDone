@@ -1,29 +1,28 @@
-import { z } from "zod";
+import { number, z } from "zod";
 //import { t, publicProcedure } from "../trpc";
-
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 //
-import { prisma } from "../../../utils/prisma.server";
+import { UserTable as Table } from "@prisma/client";
+//import { prisma } from "../../../utils/prisma.server";
 import { router, publicProcedure } from "../trpc";
 
 export const userRouter = router({
-  // userList: publicProcedure.query(async () => {
-  //   const User = await prisma.userTable.findMany();
-  //   return User;
-  // }),
+  userList: publicProcedure.query(async () => {
+    const Users = await prisma.userTable.findMany();
 
-  // completion: publicProcedure
-  //   .input(z.object({ prompt: z.string() }))
-  //   .mutation(async (opts) => {
-  //     const { input } = opts;
-
-  //     const User = await prisma.userTable.findMany();
-  //     return User;
-  //   }),
-
-  Test: publicProcedure.query(async () => {
-    const Test = "hello world";
-    return Test;
+    return Users;
   }),
+  deleteUser: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async (opts) => {
+      const { input } = opts;
+      const deleteUser = await prisma.userTable.delete({
+        where: {
+          id: parseInt(input), // what the gay
+        },
+      });
+    }),
 
   // userCreate: publicProcedure
   //   .input(z.object({ name: z.string() }))
