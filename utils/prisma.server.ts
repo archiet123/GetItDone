@@ -5,18 +5,18 @@ declare global {
   var __db: PrismaClient | undefined;
 }
 
-async function Main() {
-  const user = await prisma.user.findMany();
-  console.log(user);
-}
+// async function Main() {
+//   const user = await prisma.user.findMany();
+//   console.log(user);
+// }
 
-Main()
-  .catch((e) => {
-    console.error(e.message);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+// Main()
+//   .catch((e) => {
+//     console.error(e.message);
+//   })
+//   .finally(async () => {
+//     await prisma.$disconnect();
+//   });
 
 export { prisma };
 
