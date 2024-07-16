@@ -8,34 +8,56 @@ import { UserTable as Table } from "@prisma/client";
 import { router, publicProcedure } from "../trpc";
 
 export const userRouter = router({
-  userList: publicProcedure.query(async () => {
-    const Users = await prisma.userTable.findMany();
-
+  RecordFetch: publicProcedure.query(async () => {
+    const Users = await prisma.testTable.findMany();
     return Users;
   }),
   deleteUser: publicProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({ cuid: z.string() }))
     .mutation(async (opts) => {
       const { input } = opts;
-      const deleteUser = await prisma.userTable.delete({
+      const deleteUser = await prisma.testTable.delete({
         where: {
-          id: parseInt(input), // what the gay
+          id: input.cuid, // what in the gay
+        },
+      });
+      return deleteUser;
+    }),
+
+  createRecord: publicProcedure
+    .input(z.object({ description: z.string() }))
+    .mutation(async ({ input }) => {
+      await prisma.testTable.create({
+        data: {
+          Description: input.description,
         },
       });
     }),
-
-  // userCreate: publicProcedure
-  //   .input(z.object({ name: z.string() }))
-  //   .mutation(async (opts) => {
-  //     const { input } = opts;
-
-  //     // Retrieve the user with the given ID
-  //     // Create a new user in the database
-  //     const createUser = await prisma.user.create({
-  //       data: {
-  //         name: "asdf",
-  //       },
-  //     });
-  //     return createUser;
-  //   }),
+  updateRecord: publicProcedure
+    .input(z.object({ cuid: z.string(), datetime: z.string() }))
+    .mutation(async ({ input }) => {
+      await prisma.testTable.update({
+        where: {
+          id: input.cuid,
+        },
+        data: {
+          CompleteBy: input.datetime,
+        },
+      });
+    }),
 });
+
+// userCreate: publicProcedure
+//   .input(z.object({ name: z.string() }))
+//   .mutation(async (opts) => {
+//     const { input } = opts;
+
+//     // Retrieve the user with the given ID
+//     // Create a new user in the database
+//     const createUser = await prisma.user.create({
+//       data: {
+//         name: "asdf",
+//       },
+//     });
+//     return createUser;
+//   }),

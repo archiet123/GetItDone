@@ -19,3 +19,19 @@ model UserTable {
   description String
 }
 
+
+model TestTable {
+
+  id String @id @default(cuid())
+  CompleteBy DateTime?
+  DateCreated DateTime @default(now())
+  TestType Type @default(Task)
+  Description String
+}
+
+enum Type{
+  Task
+  Purchase
+  Reminder
+
+}

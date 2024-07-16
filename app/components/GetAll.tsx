@@ -7,17 +7,25 @@ import { useState, Fragment } from "react";
 // }
 
 export default function Robbery() {
-  const UserRecords = trpc.user1.userList.useQuery();
-
+  const TestRecords = trpc.user1.RecordFetch.useQuery();
   return (
-    <main className="flex flex-col min-h-screen items-center bg-primary text-white">
-      <ul>
-        {UserRecords.data?.map((UserRecord, i) => (
-          <Fragment key={i}>
-            {UserRecord.name} {UserRecord.description}
-          </Fragment>
+    <main className="flex flex-col items-center bg-primary text-white">
+      <div className="flex flex-col ">
+        {TestRecords.data?.map((TestRecord, i) => (
+          <div
+            key={i}
+            className="flex flex-col m-2 bg-purple-700 rounded-md p-4"
+          >
+            <p>Record ID: {TestRecord.id}</p>
+            <p>Record CompleteBy: {TestRecord.CompleteBy}</p>
+            <p>Record DateCreated: {TestRecord.DateCreated}</p>
+            <p>Record TestType: {TestRecord.TestType}</p>
+            <p>Record Description: {TestRecord.Description}</p>
+            {/* {TestRecord.id} {TestRecord.CompleteBy} {TestRecord.DateCreated}{" "}
+            {TestRecord.TestType} {TestRecord.Description} */}
+          </div>
         ))}
-      </ul>
+      </div>
     </main>
   );
 }

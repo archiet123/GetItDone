@@ -14,11 +14,11 @@ import { Button } from "@chakra-ui/react";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-primary text-white m-auto">
+    <main className="bg-primary text-white m-auto min-h-screen">
       <div id="title" className="flex flex-col text-center">
         <h1 className="title">hello world</h1>
       </div>
-      <div className="">
+      <div className="flex flex-col m-4">
         <GetAll></GetAll>
       </div>
       <div className="">
