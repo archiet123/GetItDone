@@ -1,42 +1,63 @@
-import { z } from "zod";
+import { number, z } from "zod";
 //import { t, publicProcedure } from "../trpc";
-
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 //
-import { prisma } from "../../../utils/prisma.server";
+import { UserTable as Table } from "@prisma/client";
+//import { prisma } from "../../../utils/prisma.server";
 import { router, publicProcedure } from "../trpc";
 
 export const userRouter = router({
-  // userList: publicProcedure.query(async () => {
-  //   const User = await prisma.userTable.findMany();
-  //   return User;
-  // }),
-
-  // completion: publicProcedure
-  //   .input(z.object({ prompt: z.string() }))
-  //   .mutation(async (opts) => {
-  //     const { input } = opts;
-
-  //     const User = await prisma.userTable.findMany();
-  //     return User;
-  //   }),
-
-  Test: publicProcedure.query(async () => {
-    const Test = "hello world";
-    return Test;
+  RecordFetch: publicProcedure.query(async () => {
+    const Users = await prisma.testTable.findMany();
+    return Users;
   }),
+  deleteUser: publicProcedure
+    .input(z.object({ cuid: z.string() }))
+    .mutation(async (opts) => {
+      const { input } = opts;
+      const deleteUser = await prisma.testTable.delete({
+        where: {
+          id: input.cuid, // what in the gay
+        },
+      });
+      return deleteUser;
+    }),
 
-  // userCreate: publicProcedure
-  //   .input(z.object({ name: z.string() }))
-  //   .mutation(async (opts) => {
-  //     const { input } = opts;
-
-  //     // Retrieve the user with the given ID
-  //     // Create a new user in the database
-  //     const createUser = await prisma.user.create({
-  //       data: {
-  //         name: "asdf",
-  //       },
-  //     });
-  //     return createUser;
-  //   }),
+  createRecord: publicProcedure
+    .input(z.object({ description: z.string() }))
+    .mutation(async ({ input }) => {
+      await prisma.testTable.create({
+        data: {
+          Description: input.description,
+        },
+      });
+    }),
+  updateRecord: publicProcedure
+    .input(z.object({ cuid: z.string(), datetime: z.string() }))
+    .mutation(async ({ input }) => {
+      await prisma.testTable.update({
+        where: {
+          id: input.cuid,
+        },
+        data: {
+          CompleteBy: input.datetime,
+        },
+      });
+    }),
 });
+
+// userCreate: publicProcedure
+//   .input(z.object({ name: z.string() }))
+//   .mutation(async (opts) => {
+//     const { input } = opts;
+
+//     // Retrieve the user with the given ID
+//     // Create a new user in the database
+//     const createUser = await prisma.user.create({
+//       data: {
+//         name: "asdf",
+//       },
+//     });
+//     return createUser;
+//   }),
