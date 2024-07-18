@@ -12,31 +12,33 @@ export default function Buttons() {
   const TestRecords = trpc.user1.RecordFetch.useQuery();
   const [description, SetDescription] = useState<string>("");
   const [cuid, SetCuid] = useState<string>("");
-  const [datetime, SetDateTime] = useState<string>("");
 
-  const ClearDeleteField = () => {
+  //
+  const [updatecuid, Setupdatecuid] = useState<string>("");
+  const [update, Setupdate] = useState<string>("");
+
+  const ClearFields = () => {
+    Setupdate("");
+    Setupdatecuid("");
     SetCuid("");
-  };
-
-  const ClearDescFields = () => {
     SetDescription("");
   };
 
   const createUser = trpc.user1.createRecord.useMutation({
     onSettled: () => {
-      ClearDescFields();
+      ClearFields();
       TestRecords.refetch();
     },
   });
   const deleteRecord = trpc.user1.deleteUser.useMutation({
     onSettled: () => {
-      ClearDeleteField();
+      ClearFields();
       TestRecords.refetch();
     },
   });
   const updateRecord = trpc.user1.updateRecord.useMutation({
     onSettled: () => {
-      ClearDeleteField();
+      ClearFields();
       TestRecords.refetch();
     },
   });
@@ -45,6 +47,7 @@ export default function Buttons() {
     <main className="flex flex-col items-center bg-primary text-white">
       <div className="flex flex-col text-white p-2">
         <div className="createContainer flex flex-col p-2">
+          //create
           <input
             onChange={(e) => SetDescription(e.target.value)}
             id="description"
@@ -59,31 +62,31 @@ export default function Buttons() {
             create
           </Button>
         </div>
-
+        //update
         <div id="updateContainer" className="flex flex-col p-2">
           <input
-            onChange={(e) => SetCuid(e.target.value)}
+            onChange={(e) => Setupdatecuid(e.target.value)}
             id="cuid"
-            placeholder="cuid to update"
+            placeholder="cuid to find"
             className="p-2 text-stone-950"
-            value={cuid}
+            value={updatecuid}
           ></input>
           <input
-            onChange={(e) => SetDateTime(e.target.value)}
-            id="datetime"
-            placeholder="datetime value"
+            onChange={(e) => Setupdate(e.target.value)}
+            id="update"
+            placeholder="update to update"
             className="p-2 text-stone-950"
-            value={datetime}
-            type="datetime-local"
+            value={update}
+            // type="datetime-local"
           ></input>
           <Button
             className="flex flex-col p-2 text-stone-950"
-            onClick={() => updateRecord.mutate({ cuid, datetime })}
+            onClick={() => updateRecord.mutate({ updatecuid, update })}
           >
             update
           </Button>
         </div>
-
+        //delete
         <div id="deleteContainer" className="flex flex-col p-2">
           <input
             onChange={(e) => SetCuid(e.target.value)}

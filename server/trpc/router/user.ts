@@ -34,14 +34,14 @@ export const userRouter = router({
       });
     }),
   updateRecord: publicProcedure
-    .input(z.object({ cuid: z.string(), datetime: z.string() }))
+    .input(z.object({ updatecuid: z.string(), update: z.string() }))
     .mutation(async ({ input }) => {
       await prisma.testTable.update({
         where: {
-          id: input.cuid,
+          id: input.updatecuid,
         },
         data: {
-          CompleteBy: input.datetime,
+          Description: input.update,
         },
       });
     }),
