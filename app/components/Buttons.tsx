@@ -47,7 +47,7 @@ export default function Buttons() {
     <main className="flex flex-col items-center bg-primary text-white">
       <div className="flex flex-col text-white p-2">
         <div className="createContainer flex flex-col p-2">
-          //create
+          {/* //create */}
           <input
             onChange={(e) => SetDescription(e.target.value)}
             id="description"
@@ -62,7 +62,7 @@ export default function Buttons() {
             create
           </Button>
         </div>
-        //update
+        {/* //update */}
         <div id="updateContainer" className="flex flex-col p-2">
           <input
             onChange={(e) => Setupdatecuid(e.target.value)}
@@ -86,7 +86,7 @@ export default function Buttons() {
             update
           </Button>
         </div>
-        //delete
+        {/* //delete */}
         <div id="deleteContainer" className="flex flex-col p-2">
           <input
             onChange={(e) => SetCuid(e.target.value)}
