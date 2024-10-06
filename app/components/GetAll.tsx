@@ -8,6 +8,9 @@ import { useState, Fragment } from "react";
 
 export default function Robbery() {
   const TestRecords = trpc.user1.RecordFetch.useQuery();
+
+  // var date: Date;
+
   return (
     <main className="flex flex-col items-center bg-primary text-white">
       <div className="flex flex-col ">
@@ -18,11 +21,12 @@ export default function Robbery() {
           >
             <p>Record ID: {TestRecord.id}</p>
             <p>Record CompleteBy: {TestRecord.CompleteBy}</p>
-            <p>Record DateCreated: {TestRecord.DateCreated}</p>
+            <p>
+              Record DateCreated:{" "}
+              {new Date(TestRecord.DateCreated).toDateString()}
+            </p>
             <p>Record TestType: {TestRecord.TestType}</p>
             <p>Record Description: {TestRecord.Description}</p>
-            {/* {TestRecord.id} {TestRecord.CompleteBy} {TestRecord.DateCreated}{" "}
-            {TestRecord.TestType} {TestRecord.Description} */}
           </div>
         ))}
       </div>
