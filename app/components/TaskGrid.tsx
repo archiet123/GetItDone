@@ -21,7 +21,11 @@ import {
   ModalCloseButton,
   useDisclosure,
   Input,
+  extendTheme,
+  Select,
 } from "@chakra-ui/react";
+
+import { modalTheme } from "./themes/modal";
 
 import { CalendarIcon, AddIcon, WarningIcon, EditIcon } from "@chakra-ui/icons";
 import test from "node:test";
@@ -66,45 +70,48 @@ export default function TaskGrid() {
   return (
     <main className="top-16 start-1/4 relative right-0 w-1/2">
       <div className="mappedTasks ">
-        {TaskRecords.data?.map((TaskRecord, i) => (
-          <SimpleGrid columns={2} padding={0}>
-            <Card
-              background={"#292a3f"}
-              textColor={"#FFFFFF"}
-              className="m-4 h-48 rounded-xl w-full"
-              borderRadius={4}
-              border={2}
-              borderStyle={"solid"}
-              borderColor={"#292a3f"}
-            >
-              <CardHeader
-                padding={0}
+        <SimpleGrid columns={2} padding={5} spacing={10}>
+          {TaskRecords.data?.map((TaskRecord, i) => (
+            <Box>
+              <Card
                 background={"#292a3f"}
                 textColor={"#FFFFFF"}
-                className="mb-4"
+                className="m-4 h-48 rounded-xl w-full"
+                borderRadius={4}
+                border={2}
+                borderStyle={"solid"}
+                borderColor={"#292a3f"}
+                padding={0}
+                margin={0}
               >
-                <Heading size="md">{TaskRecord.id}</Heading>
-              </CardHeader>
-              <CardBody padding={0} background={"#292a3f"}>
-                <Text>{TaskRecord.Description}</Text>
-              </CardBody>
-            </Card>
-          </SimpleGrid>
-        ))}
+                <CardHeader
+                  padding={0}
+                  background={"#292a3f"}
+                  textColor={"#FFFFFF"}
+                  className="mb-4"
+                >
+                  <Heading size="md">{TaskRecord.id}</Heading>
+                </CardHeader>
+                <CardBody padding={0} background={"#292a3f"}>
+                  <Text>{TaskRecord.Description}</Text>
+                </CardBody>
+              </Card>
+            </Box>
+          ))}
 
+          <Button
+            color={"red"}
+            background={"#cc709f"}
+            className="w-1/2 start-1/4 top-1/3"
+            onClick={() => OpenModal()}
+          >
+            <AddIcon color={"white"}></AddIcon>
+          </Button>
+        </SimpleGrid>
         <Button
-          color={"red"}
-          background={"red"}
-          className="start-72"
-          onClick={() => OpenModal()}
-        >
-          <AddIcon color={"black"}></AddIcon>
-        </Button>
-
-        <Button
-          color={"white"}
-          background={"red"}
-          className="start-72"
+          textColor={"white"}
+          background={"#cc709f"}
+          className="w-1/2 start-1/4 mt-10"
           onClick={() => deleteMany.mutateAsync({ DelDescription })}
         >
           delete many
@@ -113,18 +120,50 @@ export default function TaskGrid() {
 
       {/* Modal */}
       <Box w="100" display="Flex" justifyContent="center">
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered size={"xl"}>
           <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Modal Title</ModalHeader>
+          <ModalContent background={"#353453"}>
+            <ModalHeader>
+              <Text color={"white"}>Create Task</Text>
+            </ModalHeader>
             <ModalCloseButton />
+
             <ModalBody>
-              <Input
-                ref={initialRef}
-                value={ModalValue}
-                placeholder="First name"
-                onChange={(e) => SetModalValue(e.target.value)}
-              />
+              <SimpleGrid columns={2} spacing={4}>
+                <Input
+                  margin={3}
+                  ref={initialRef}
+                  value={ModalValue}
+                  placeholder="Task Title"
+                  onChange={(e) => SetModalValue(e.target.value)}
+                  color={"white"}
+                />
+                <Input
+                  placeholder="Task Description"
+                  margin={3}
+                  color={"white"}
+                  // onChange={(e) => SetModalValue(e.target.value)}
+                />
+                <Input
+                  placeholder="Complete By"
+                  margin={3}
+                  color={"white"}
+                  // onChange={(e) => SetModalValue(e.target.value)}
+                />
+
+                <Select margin={3} color={"white"}>
+                  {" "}
+                  <option className="text-black" value="option1">
+                    Option 1
+                  </option>
+                  <option className="text-black" value="option2">
+                    Option 2
+                  </option>
+                  <option className="text-black" value="option3">
+                    Option 3
+                  </option>
+                </Select>
+              </SimpleGrid>
             </ModalBody>
 
             <ModalFooter>

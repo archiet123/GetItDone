@@ -4,6 +4,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Provider from "@/app/components/provider";
 
+import { extendTheme } from "@chakra-ui/react";
+import { modalTheme } from "./components/themes/modal";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
