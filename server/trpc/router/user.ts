@@ -45,19 +45,24 @@ export const userRouter = router({
         },
       });
     }),
+  createTask: publicProcedure
+    .input(z.object({ ModalValue: z.string() }))
+    .mutation(async ({ input }) => {
+      await prisma.testTable.create({
+        data: {
+          Description: input.ModalValue,
+        },
+      });
+    }),
+  deleteMany: publicProcedure
+    .input(z.object({ DelDescription: z.string() }))
+    .mutation(async ({ input }) => {
+      await prisma.testTable.deleteMany({
+        where: {
+          Description: {
+            contains: "test",
+          },
+        },
+      });
+    }),
 });
-
-// userCreate: publicProcedure
-//   .input(z.object({ name: z.string() }))
-//   .mutation(async (opts) => {
-//     const { input } = opts;
-
-//     // Retrieve the user with the given ID
-//     // Create a new user in the database
-//     const createUser = await prisma.user.create({
-//       data: {
-//         name: "asdf",
-//       },
-//     });
-//     return createUser;
-//   }),
