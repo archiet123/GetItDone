@@ -39,18 +39,18 @@ export default function TaskGrid() {
 
   const [DelDescription, SetDelDescription] = useState<string>("");
 
-  const [ModalValue, SetModalValue] = useState<string>("");
+  const [ModalTaskTitle, SetModalTaskTitle] = useState<string>("");
 
   const ClearFields = () => {
-    SetModalValue("");
+    SetModalTaskTitle("");
   };
 
   function OpenModal() {
     onOpen();
   }
 
-  function CloseModal(ModalValue: string) {
-    createTask.mutate({ ModalValue });
+  function CloseModal(ModalTaskTitle: string) {
+    createTask.mutate({ ModalTaskTitle });
     onClose();
     ClearFields();
   }
@@ -90,7 +90,7 @@ export default function TaskGrid() {
                   textColor={"#FFFFFF"}
                   className="mb-4"
                 >
-                  <Heading size="md">{TaskRecord.id}</Heading>
+                  <Heading size="md">{TaskRecord.TaskTitle}</Heading>
                 </CardHeader>
                 <CardBody padding={0} background={"#292a3f"}>
                   <Text>{TaskRecord.Description}</Text>
@@ -133,9 +133,9 @@ export default function TaskGrid() {
                 <Input
                   margin={3}
                   ref={initialRef}
-                  value={ModalValue}
+                  value={ModalTaskTitle}
                   placeholder="Task Title"
-                  onChange={(e) => SetModalValue(e.target.value)}
+                  onChange={(e) => SetModalTaskTitle(e.target.value)}
                   color={"white"}
                 />
                 <Input
@@ -170,7 +170,7 @@ export default function TaskGrid() {
               <Button
                 colorScheme="blue"
                 mr={3}
-                onClick={() => CloseModal(ModalValue)}
+                onClick={() => CloseModal(ModalTaskTitle)}
               >
                 Save
               </Button>
