@@ -32,6 +32,7 @@ model TestTable {
 model TaskRecords {
 
   id String @id @default(cuid())
+  Index Int @default(autoincrement())
   TaskTitle String
   Description String
   CompleteBy DateTime?

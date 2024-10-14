@@ -1,4 +1,4 @@
-import { number, z } from "zod";
+import { date, number, z } from "zod";
 //import { t, publicProcedure } from "../trpc";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
@@ -9,7 +9,11 @@ import { router, publicProcedure } from "../trpc";
 
 export const userRouter = router({
   RecordFetch: publicProcedure.query(async () => {
-    const Users = await prisma.taskRecords.findMany();
+    const Users = await prisma.taskRecords.findMany({
+      orderBy: {
+        CompleteBy: "desc",
+      },
+    });
     return Users;
   }),
   deleteUser: publicProcedure
@@ -23,16 +27,6 @@ export const userRouter = router({
       });
       return deleteUser;
     }),
-
-  // createRecord: publicProcedure
-  //   .input(z.object({ description: z.string() }))
-  //   .mutation(async ({ input }) => {
-  //     await prisma.taskRecords.create({
-  //       data: {
-  //         Description: input.description,
-  //       },
-  //     });
-  //   }),
   updateRecord: publicProcedure
     .input(z.object({ updatecuid: z.string(), update: z.string() }))
     .mutation(async ({ input }) => {
@@ -46,12 +40,15 @@ export const userRouter = router({
       });
     }),
   createTask: publicProcedure
-    .input(z.object({ ModalTaskTitle: z.string() }))
+    .input(
+      z.object({ ModalTaskTitle: z.string(), ModalTaskDatetime: z.string() })
+    )
     .mutation(async ({ input }) => {
       await prisma.taskRecords.create({
         data: {
           TaskTitle: input.ModalTaskTitle,
           Description: "test",
+          CompleteBy: new Date(input.ModalTaskDatetime),
         },
       });
     }),

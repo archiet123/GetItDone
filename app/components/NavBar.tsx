@@ -1,17 +1,26 @@
 import Icon from "../faviconOld.png";
 import Image from "next/image";
 import { CalendarIcon, AddIcon, WarningIcon, EditIcon } from "@chakra-ui/icons";
-import { Button, ButtonGroup, SimpleGrid } from "@chakra-ui/react";
+import { Button, ButtonGroup, SimpleGrid, Text } from "@chakra-ui/react";
 
 export default function NavBar() {
   return (
     <main className="absolute left-0 bg-primary2 w-72 h-screen">
       <div className="text-center">
-        <Image
+        {/* <Image
           className="object-cover relative size-56 left-5 mb-10"
           src={Icon}
           alt="Icon"
-        />
+        /> */}
+
+        <Text
+          className="mb-10"
+          fontSize={72}
+          fontFamily={"monospace"}
+          fontWeight={"bold"}
+        >
+          Get It Done
+        </Text>
 
         <div className="button mb-4">
           <Button className="flex-col" onClick={() => console.log("clicked")}>

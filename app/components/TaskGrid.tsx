@@ -41,6 +41,9 @@ export default function TaskGrid() {
 
   const [ModalTaskTitle, SetModalTaskTitle] = useState<string>("");
 
+  const [ModalTaskDatetime, SetModalTaskDatetime] = useState<string>("");
+  //  const [ModalTaskDatetime, SetModalTaskDatetime] = useState<Date>(new Date());
+
   const ClearFields = () => {
     SetModalTaskTitle("");
   };
@@ -49,8 +52,8 @@ export default function TaskGrid() {
     onOpen();
   }
 
-  function CloseModal(ModalTaskTitle: string) {
-    createTask.mutate({ ModalTaskTitle });
+  function CloseModal(ModalTaskTitle: string, ModalTaskDatetime: string) {
+    createTask.mutate({ ModalTaskTitle, ModalTaskDatetime });
     onClose();
     ClearFields();
   }
@@ -91,9 +94,14 @@ export default function TaskGrid() {
                   className="mb-4"
                 >
                   <Heading size="md">{TaskRecord.TaskTitle}</Heading>
+                  <Text>{TaskRecord.Index}</Text>
                 </CardHeader>
                 <CardBody padding={0} background={"#292a3f"}>
                   <Text>{TaskRecord.Description}</Text>
+                  <Text>
+                    {new Date(TaskRecord.CompleteBy).toLocaleDateString()}
+                  </Text>
+                  <Text>{new Date(TaskRecord.DateCreated).toDateString()}</Text>
                 </CardBody>
               </Card>
             </Box>
@@ -132,7 +140,7 @@ export default function TaskGrid() {
               <SimpleGrid columns={2} spacing={4}>
                 <Input
                   margin={3}
-                  ref={initialRef}
+                  // ref={initialRef}
                   value={ModalTaskTitle}
                   placeholder="Task Title"
                   onChange={(e) => SetModalTaskTitle(e.target.value)}
@@ -145,9 +153,13 @@ export default function TaskGrid() {
                   // onChange={(e) => SetModalValue(e.target.value)}
                 />
                 <Input
-                  placeholder="Complete By"
+                  // placeholder="Complete By"
                   margin={3}
                   color={"white"}
+                  type="datetime-local"
+                  value={ModalTaskDatetime}
+                  onChange={(e) => SetModalTaskDatetime(e.target.value)}
+
                   // onChange={(e) => SetModalValue(e.target.value)}
                 />
 
@@ -170,7 +182,7 @@ export default function TaskGrid() {
               <Button
                 colorScheme="blue"
                 mr={3}
-                onClick={() => CloseModal(ModalTaskTitle)}
+                onClick={() => CloseModal(ModalTaskTitle, ModalTaskDatetime)}
               >
                 Save
               </Button>
