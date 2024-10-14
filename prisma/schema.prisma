@@ -29,6 +29,18 @@ model TestTable {
   Description String
 }
 
+model TaskRecords {
+
+  id String @id @default(cuid())
+  TaskTitle String
+  Description String
+  CompleteBy DateTime?
+  DateCreated DateTime @default(now())
+  ModifiedData DateTime?
+  TestType Type @default(Task)
+ 
+}
+
 enum Type{
   Task
   Purchase

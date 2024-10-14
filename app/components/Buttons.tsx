@@ -24,12 +24,12 @@ export default function Buttons() {
     SetDescription("");
   };
 
-  const createUser = trpc.user1.createRecord.useMutation({
-    onSettled: () => {
-      ClearFields();
-      TestRecords.refetch();
-    },
-  });
+  // const createUser = trpc.user1.createRecord.useMutation({
+  //   onSettled: () => {
+  //     ClearFields();
+  //     TestRecords.refetch();
+  //   },
+  // });
   const deleteRecord = trpc.user1.deleteUser.useMutation({
     onSettled: () => {
       ClearFields();
@@ -55,12 +55,12 @@ export default function Buttons() {
             className="p-2 text-stone-950"
             value={description}
           ></input>
-          <Button
+          {/* <Button
             className="flex flex-col p-2 text-stone-950"
             onClick={() => createUser.mutate({ description })}
           >
             create
-          </Button>
+          </Button> */}
         </div>
         {/* //update */}
         <div id="updateContainer" className="flex flex-col p-2">

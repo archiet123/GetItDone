@@ -12,6 +12,7 @@
     "test": "npx tsx script.ts"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^2.8.2",
     "@prisma/client": "^5.16.1",
     "@tanstack/react-query": "^4.36.1",
@@ -19,10 +20,12 @@
     "@trpc/next": "^10.45.2",
     "@trpc/react-query": "^10.45.2",
     "@trpc/server": "^10.45.2",
+    "moment": "^2.30.1",
     "next": "14.2.4",
     "next-auth": "^4.24.7",
     "next.js": "^1.0.3",
     "node-fetch": "^3.3.2",
+    "prisma": "^5.20.0",
     "react": "^18.3.1",
     "react-dom": "^18",
     "super-json": "^2.2.0",
