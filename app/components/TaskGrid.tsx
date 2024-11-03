@@ -1,6 +1,7 @@
 import { trpc } from "../../server/client";
 import React from "react";
 import { useState, Fragment } from "react";
+import TaskFunctions from "./TaskFunctions";
 
 import {
   SimpleGrid,
@@ -27,8 +28,16 @@ import {
 
 import { modalTheme } from "./themes/modal";
 
-import { CalendarIcon, AddIcon, WarningIcon, EditIcon } from "@chakra-ui/icons";
+import {
+  CalendarIcon,
+  AddIcon,
+  WarningIcon,
+  DeleteIcon,
+  EditIcon,
+  InfoIcon,
+} from "@chakra-ui/icons";
 import test from "node:test";
+import { complex } from "framer-motion";
 
 export default function TaskGrid() {
   const TaskRecords = trpc.user1.RecordFetch.useQuery();
@@ -41,21 +50,44 @@ export default function TaskGrid() {
 
   const [ModalTaskTitle, SetModalTaskTitle] = useState<string>("");
 
+  const [ModalTaskDescription, SetModalTaskDescription] = useState<string>("");
+
   const [ModalTaskDatetime, SetModalTaskDatetime] = useState<string>("");
   //  const [ModalTaskDatetime, SetModalTaskDatetime] = useState<Date>(new Date());
 
   const ClearFields = () => {
     SetModalTaskTitle("");
+    SetModalTaskDescription("");
   };
 
   function OpenModal() {
     onOpen();
   }
 
-  function CloseModal(ModalTaskTitle: string, ModalTaskDatetime: string) {
-    createTask.mutate({ ModalTaskTitle, ModalTaskDatetime });
+  function CloseModal(
+    ModalTaskTitle: string,
+    ModalTaskDescription: string,
+    ModalTaskDatetime: string
+  ) {
+    createTask.mutate({
+      ModalTaskTitle,
+      ModalTaskDescription,
+      ModalTaskDatetime,
+    });
     onClose();
     ClearFields();
+  }
+
+  function CompleteTask(TaskID: string) {
+    completeTask.mutate({
+      TaskID,
+    });
+  }
+
+  function DeleteTask(TaskID: string) {
+    deleteTask.mutate({
+      TaskID,
+    });
   }
 
   const deleteMany = trpc.user1.deleteMany.useMutation({
@@ -70,8 +102,49 @@ export default function TaskGrid() {
     },
   });
 
+  const deleteTask = trpc.user1.deleteTask.useMutation({
+    onSettled: () => {
+      TaskRecords.refetch();
+    },
+  });
+
+  const completeTask = trpc.user1.completeTask.useMutation({
+    onSettled: () => {
+      TaskRecords.refetch();
+    },
+  });
+
   return (
-    <main className="top-16 start-1/4 relative right-0 w-1/2">
+    <main className="top-16 relative w-3/4 translate-x-1/4">
+      <div className="w-full p-5 relative right-0 flex flex-row justify-end">
+        <Button
+          color={"red"}
+          background={"#cc709f"}
+          className="ml-3"
+          onClick={() => OpenModal()}
+        >
+          <AddIcon color={"white"}></AddIcon>
+        </Button>
+
+        <Button
+          textColor={"white"}
+          background={"#cc709f"}
+          className="ml-3"
+          onClick={() => deleteMany.mutateAsync({ DelDescription })}
+        >
+          delete many
+        </Button>
+
+        <Button
+          textColor={"white"}
+          background={"#cc709f"}
+          className="ml-3"
+          onClick={() => deleteMany.mutateAsync({ DelDescription })}
+        >
+          <InfoIcon color={"white"}></InfoIcon>
+        </Button>
+      </div>
+
       <div className="mappedTasks ">
         <SimpleGrid columns={2} padding={5} spacing={10}>
           {TaskRecords.data?.map((TaskRecord, i) => (
@@ -79,7 +152,7 @@ export default function TaskGrid() {
               <Card
                 background={"#292a3f"}
                 textColor={"#FFFFFF"}
-                className="m-4 h-48 rounded-xl w-full"
+                className="m-4 rounded-xl w-full"
                 borderRadius={4}
                 border={2}
                 borderStyle={"solid"}
@@ -91,39 +164,56 @@ export default function TaskGrid() {
                   padding={0}
                   background={"#292a3f"}
                   textColor={"#FFFFFF"}
-                  className="mb-4"
+                  className="mb-4 m-2"
                 >
-                  <Heading size="md">{TaskRecord.TaskTitle}</Heading>
-                  <Text>{TaskRecord.Index}</Text>
+                  <div className="flex flex-row justify-between ">
+                    <Heading size="md">{TaskRecord.TaskTitle}</Heading>
+                    <Button
+                      background={"#292a3f"}
+                      _hover={{
+                        color: "#292a3f",
+                      }}
+                      onClick={() => DeleteTask(TaskRecord.id)}
+                    >
+                      <DeleteIcon
+                        boxSize={6}
+                        color={"white"}
+                        _hover={{
+                          color: "#FF0000",
+                        }}
+                      ></DeleteIcon>
+                    </Button>
+                  </div>
                 </CardHeader>
-                <CardBody padding={0} background={"#292a3f"}>
+                <CardBody padding={0} background={"#292a3f"} m={2}>
                   <Text>{TaskRecord.Description}</Text>
                   <Text>
-                    {new Date(TaskRecord.CompleteBy).toLocaleDateString()}
+                    {/* {new Date(TaskRecord.CompleteBy).toLocaleDateString()} */}
                   </Text>
                   <Text>{new Date(TaskRecord.DateCreated).toDateString()}</Text>
                 </CardBody>
+                <CardFooter
+                  className="flex relative"
+                  padding={0}
+                  m={0}
+                  background={"#292a3f"}
+                >
+                  <Button
+                    className=""
+                    m={2}
+                    color={"white"}
+                    background={"#cc709f"}
+                    right={0}
+                    position={"relative"}
+                    onClick={() => CompleteTask(TaskRecord.id)}
+                  >
+                    Resolve
+                  </Button>
+                </CardFooter>
               </Card>
             </Box>
           ))}
-
-          <Button
-            color={"red"}
-            background={"#cc709f"}
-            className="w-1/2 start-1/4 top-1/3"
-            onClick={() => OpenModal()}
-          >
-            <AddIcon color={"white"}></AddIcon>
-          </Button>
         </SimpleGrid>
-        <Button
-          textColor={"white"}
-          background={"#cc709f"}
-          className="w-1/2 start-1/4 mt-10"
-          onClick={() => deleteMany.mutateAsync({ DelDescription })}
-        >
-          delete many
-        </Button>
       </div>
 
       {/* Modal */}
@@ -147,10 +237,11 @@ export default function TaskGrid() {
                   color={"white"}
                 />
                 <Input
+                  value={ModalTaskDescription}
                   placeholder="Task Description"
                   margin={3}
                   color={"white"}
-                  // onChange={(e) => SetModalValue(e.target.value)}
+                  onChange={(e) => SetModalTaskDescription(e.target.value)}
                 />
                 <Input
                   // placeholder="Complete By"
@@ -182,7 +273,13 @@ export default function TaskGrid() {
               <Button
                 colorScheme="blue"
                 mr={3}
-                onClick={() => CloseModal(ModalTaskTitle, ModalTaskDatetime)}
+                onClick={() =>
+                  CloseModal(
+                    ModalTaskTitle,
+                    ModalTaskDescription,
+                    ModalTaskDatetime
+                  )
+                }
               >
                 Save
               </Button>
