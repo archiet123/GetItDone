@@ -32,17 +32,18 @@ model TestTable {
 model TaskRecords {
 
   id String @id @default(cuid())
+  Index Int @default(autoincrement())
   TaskTitle String
   Description String
   CompleteBy DateTime?
   DateCreated DateTime @default(now())
   ModifiedData DateTime?
-  TestType Type @default(Task)
+  TaskType String @default("Task")
  
 }
 
 enum Type{
-  Task
+  Task 
   Purchase
   Reminder
 
