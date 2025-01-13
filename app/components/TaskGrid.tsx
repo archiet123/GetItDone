@@ -24,6 +24,8 @@ import {
   Input,
   extendTheme,
   Select,
+  Textarea,
+  Flex,
 } from "@chakra-ui/react";
 
 import { modalTheme } from "./themes/modal";
@@ -38,6 +40,7 @@ import {
 } from "@chakra-ui/icons";
 import test from "node:test";
 import { complex } from "framer-motion";
+import { max } from "moment";
 
 export default function TaskGrid() {
   const TaskRecords = trpc.user1.RecordFetch.useQuery();
@@ -53,11 +56,14 @@ export default function TaskGrid() {
   const [ModalTaskDescription, SetModalTaskDescription] = useState<string>("");
 
   const [ModalTaskDatetime, SetModalTaskDatetime] = useState<string>("");
+
+  const [ModalTaskType, SetModalTaskType] = useState<string>("");
   //  const [ModalTaskDatetime, SetModalTaskDatetime] = useState<Date>(new Date());
 
   const ClearFields = () => {
     SetModalTaskTitle("");
     SetModalTaskDescription("");
+    SetModalTaskType("");
   };
 
   function OpenModal() {
@@ -67,12 +73,14 @@ export default function TaskGrid() {
   function CloseModal(
     ModalTaskTitle: string,
     ModalTaskDescription: string,
-    ModalTaskDatetime: string
+    ModalTaskDatetime: string,
+    ModalTaskType: string
   ) {
     createTask.mutate({
       ModalTaskTitle,
       ModalTaskDescription,
       ModalTaskDatetime,
+      ModalTaskType,
     });
     onClose();
     ClearFields();
@@ -132,14 +140,14 @@ export default function TaskGrid() {
           className="ml-3"
           onClick={() => deleteMany.mutateAsync({ DelDescription })}
         >
-          delete many
+          delete tests
         </Button>
 
         <Button
           textColor={"white"}
           background={"#cc709f"}
           className="ml-3"
-          onClick={() => deleteMany.mutateAsync({ DelDescription })}
+          // onClick={() => deleteMany.mutateAsync({ DelDescription })}
         >
           <InfoIcon color={"white"}></InfoIcon>
         </Button>
@@ -152,58 +160,77 @@ export default function TaskGrid() {
               <Card
                 background={"#292a3f"}
                 textColor={"#FFFFFF"}
-                className="m-4 rounded-xl w-full"
+                // className="m-4 rounded-xl w-full flex flex-col"
                 borderRadius={4}
                 border={2}
                 borderStyle={"solid"}
                 borderColor={"#292a3f"}
                 padding={0}
                 margin={0}
+                shadow={"lg"}
+                display={"flex"}
+                direction={"column"}
               >
                 <CardHeader
                   padding={0}
                   background={"#292a3f"}
                   textColor={"#FFFFFF"}
-                  className="mb-4 m-2"
+                  className="mb-2 m-2"
                 >
-                  <div className="flex flex-row justify-between ">
-                    <Heading size="md">{TaskRecord.TaskTitle}</Heading>
-                    <Button
-                      background={"#292a3f"}
-                      _hover={{
-                        color: "#292a3f",
-                      }}
-                      onClick={() => DeleteTask(TaskRecord.id)}
-                    >
-                      <DeleteIcon
-                        boxSize={6}
-                        color={"white"}
+                  <div className="flex flex-row justify-between">
+                    <div className="flex flex-col" id="headingContainer">
+                      <Heading size="md">{TaskRecord.TaskTitle}</Heading>
+                      <Text>{TaskRecord.TaskType}</Text>
+                    </div>
+
+                    <div className="flex flex-col" id="delContainer">
+                      <Text className="text-slate-500 flex">
+                        {new Date(TaskRecord.DateCreated).toDateString()}
+                      </Text>
+                      {/* <Text className="text-slate-500 flex">
+                        {new Date(TaskRecord.CompleteBy).toDateString()}
+                      </Text> */}
+                      <Button
+                        background={"#292a3f"}
                         _hover={{
-                          color: "#FF0000",
+                          color: "#292a3f",
                         }}
-                      ></DeleteIcon>
-                    </Button>
+                        onClick={() => DeleteTask(TaskRecord.id)}
+                        display={"flex"}
+                        justifyContent={"flex-end"}
+                        padding={0}
+                      >
+                        <DeleteIcon
+                          boxSize={6}
+                          color={"white"}
+                          _hover={{
+                            color: "#FF0000",
+                          }}
+                        ></DeleteIcon>
+                      </Button>
+                    </div>
                   </div>
                 </CardHeader>
-                <CardBody padding={0} background={"#292a3f"} m={2}>
-                  <Text>{TaskRecord.Description}</Text>
-                  <Text>
-                    {/* {new Date(TaskRecord.CompleteBy).toLocaleDateString()} */}
-                  </Text>
-                  <Text>{new Date(TaskRecord.DateCreated).toDateString()}</Text>
+                <CardBody
+                  padding={0}
+                  background={"#292a3f"}
+                  mb={4}
+                  marginInline={2}
+                  width={"75%"}
+                >
+                  <p className="line-clamp-1">{TaskRecord.Description}</p>
                 </CardBody>
                 <CardFooter
-                  className="flex relative"
+                  className="flex relative justify-end"
                   padding={0}
                   m={0}
                   background={"#292a3f"}
                 >
                   <Button
-                    className=""
+                    className="right-0 justify-end"
                     m={2}
                     color={"white"}
                     background={"#cc709f"}
-                    right={0}
                     position={"relative"}
                     onClick={() => CompleteTask(TaskRecord.id)}
                   >
@@ -218,7 +245,7 @@ export default function TaskGrid() {
 
       {/* Modal */}
       <Box w="100" display="Flex" justifyContent="center">
-        <Modal isOpen={isOpen} onClose={onClose} isCentered size={"xl"}>
+        <Modal isOpen={isOpen} onClose={onClose} isCentered size={"6xl"}>
           <ModalOverlay />
           <ModalContent background={"#353453"}>
             <ModalHeader>
@@ -227,46 +254,66 @@ export default function TaskGrid() {
             <ModalCloseButton />
 
             <ModalBody>
-              <SimpleGrid columns={2} spacing={4}>
-                <Input
-                  margin={3}
-                  // ref={initialRef}
-                  value={ModalTaskTitle}
-                  placeholder="Task Title"
-                  onChange={(e) => SetModalTaskTitle(e.target.value)}
-                  color={"white"}
-                />
-                <Input
-                  value={ModalTaskDescription}
-                  placeholder="Task Description"
-                  margin={3}
-                  color={"white"}
-                  onChange={(e) => SetModalTaskDescription(e.target.value)}
-                />
-                <Input
-                  // placeholder="Complete By"
-                  margin={3}
-                  color={"white"}
-                  type="datetime-local"
-                  value={ModalTaskDatetime}
-                  onChange={(e) => SetModalTaskDatetime(e.target.value)}
+              <Box
+                className="flex flex-row justify-between min-h-60 w-full"
+                id="modalFormContainer"
+              >
+                <Box
+                  className="flex flex-col justify-between w-1/3 mr-3"
+                  id="statsContainer"
+                >
+                  <Input
+                    // ref={initialRef}
+                    value={ModalTaskTitle}
+                    placeholder="Task Title"
+                    onChange={(e) => SetModalTaskTitle(e.target.value)}
+                    color={"white"}
+                  />
 
-                  // onChange={(e) => SetModalValue(e.target.value)}
-                />
+                  <Box id="CompleteBy">
+                    <Text className="text-gray-400">Complete By:</Text>
+                    <Input
+                      // placeholder="Complete By"
+                      color={"white"}
+                      type="datetime-local"
+                      value={ModalTaskDatetime}
+                      onChange={(e) => SetModalTaskDatetime(e.target.value)}
+                    />
+                  </Box>
 
-                <Select margin={3} color={"white"}>
+                  <Box id="">
+                    <Text className="text-gray-400">Task Type:</Text>
+                    <Select
+                      color={"white"}
+                      onChange={(e) => SetModalTaskType(e.target.value)}
+                    >
+                      {" "}
+                      <option className="text-black" value={"Task"}>
+                        Task
+                      </option>
+                      <option className="text-black" value={"Purchase"}>
+                        Purchase
+                      </option>
+                      <option className="text-black" value={"Reminder"}>
+                        Reminder
+                      </option>
+                    </Select>
+                  </Box>
+                </Box>
+                <Box
+                  className="flex flex-col h-full w-1/2 mr-3 min-h-60"
+                  id="DescriptionContainer"
+                >
                   {" "}
-                  <option className="text-black" value="option1">
-                    Option 1
-                  </option>
-                  <option className="text-black" value="option2">
-                    Option 2
-                  </option>
-                  <option className="text-black" value="option3">
-                    Option 3
-                  </option>
-                </Select>
-              </SimpleGrid>
+                  <Textarea
+                    value={ModalTaskDescription}
+                    placeholder="Task Description.."
+                    color={"white"}
+                    onChange={(e) => SetModalTaskDescription(e.target.value)}
+                    minH={60}
+                  />
+                </Box>
+              </Box>
             </ModalBody>
 
             <ModalFooter>
@@ -277,7 +324,8 @@ export default function TaskGrid() {
                   CloseModal(
                     ModalTaskTitle,
                     ModalTaskDescription,
-                    ModalTaskDatetime
+                    ModalTaskDatetime,
+                    ModalTaskType
                   )
                 }
               >

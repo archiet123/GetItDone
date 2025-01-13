@@ -38,12 +38,12 @@ model TaskRecords {
   CompleteBy DateTime?
   DateCreated DateTime @default(now())
   ModifiedData DateTime?
-  TestType Type @default(Task)
+  TaskType String @default("Task")
  
 }
 
 enum Type{
-  Task
+  Task 
   Purchase
   Reminder
 

@@ -5,6 +5,9 @@ import { PrismaClient } from "@prisma/client";
 //
 import { UserTable as Table } from "@prisma/client";
 import { prisma } from "../../../server/db/client";
+
+import { Type } from "@prisma/client";
+
 import { router, publicProcedure } from "../trpc";
 import { Input } from "postcss";
 
@@ -49,6 +52,7 @@ export const userRouter = router({
         ModalTaskTitle: z.string(),
         ModalTaskDescription: z.string(),
         ModalTaskDatetime: z.string(),
+        ModalTaskType: z.string(),
       })
     )
     .mutation(async ({ input }) => {
@@ -57,6 +61,7 @@ export const userRouter = router({
           TaskTitle: input.ModalTaskTitle,
           Description: input.ModalTaskDescription,
           CompleteBy: new Date(input.ModalTaskDatetime),
+          TaskType: input.ModalTaskType,
         },
       });
     }),
